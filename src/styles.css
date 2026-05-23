@@ -1,8 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Alumni+Sans+Collegiate+One&display=swap');
+@font-face {
+  font-family: 'Aclonica';
+  src: url('/fonts/Aclonica-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alumni Sans Collegiate One';
+  src: url('/fonts/AlumniSansCollegiateOne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alumni Sans Collegiate One';
+  src: url('/fonts/AlumniSansCollegiateOne-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Smiley Sans Oblique';
+  src: url('/fonts/SmileySans-Oblique.ttf.woff2') format('woff2'),
+    url('/fonts/SmileySans-Oblique.ttf') format('truetype');
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Smiley Sans';
+  src: url('/fonts/SmileySans-Oblique.ttf.woff2') format('woff2'),
+    url('/fonts/SmileySans-Oblique.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg: #04040c;
   --white: #ffffff;
+  --font-zh-ui: 'Smiley Sans', 'Smiley Sans Oblique', '得意黑', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --nav-gradient: linear-gradient(90deg, #b721ff 0%, #21d4fd 100%);
   --title-gradient: linear-gradient(180deg, #6f727b 0%, #f4f4f6 100%);
   --role-gradient: linear-gradient(90deg, #b721ff 0%, #21d4fd 100%);
@@ -51,6 +92,59 @@ a {
 
 .site-page::-webkit-scrollbar {
   display: none;
+}
+
+.app-root.lang-zh {
+  font-family: var(--font-zh-ui);
+}
+
+.app-root.lang-zh .menu-trigger,
+.app-root.lang-zh .site-lang-btn,
+.app-root.lang-zh .hero-title,
+.app-root.lang-zh .hero-role-row,
+.app-root.lang-zh .hero-btn,
+.app-root.lang-zh .menu-item,
+.app-root.lang-zh .about-title,
+.app-root.lang-zh .about-text,
+.app-root.lang-zh .about-pill span,
+.app-root.lang-zh .project-title,
+.app-root.lang-zh .project-card-name,
+.app-root.lang-zh .project-card-description,
+.app-root.lang-zh .contact-title,
+.app-root.lang-zh .contact-list-label {
+  font-family: var(--font-zh-ui);
+}
+
+.app-root.lang-zh .hero-title {
+  margin-top: 2.8cqw;
+  font-size: clamp(92px, 18.2cqw, 248px);
+  letter-spacing: 0.004em;
+  white-space: nowrap;
+  -webkit-text-stroke: max(2px, 0.34cqw) #34384a;
+}
+
+.app-root.lang-zh .hero-role-row {
+  width: 83%;
+  margin-top: 27.4cqw;
+  font-size: clamp(62px, 11.6cqw, 140px);
+  -webkit-text-stroke: max(1px, 0.14cqw) #1e46a3;
+}
+
+.app-root.lang-zh .hero-role-row span:first-child {
+  transform: translateX(-1cqw);
+}
+
+.app-root.lang-zh .hero-role-row span:last-child {
+  transform: translateX(1cqw);
+}
+
+.app-root.lang-zh .hero-actions {
+  width: 80%;
+  margin-top: 52cqw;
+}
+
+.app-root.lang-zh .hero-btn {
+  font-size: clamp(22px, 2.08cqw, 34px);
 }
 
 .global-shape-grid {
@@ -122,6 +216,12 @@ a {
 
 .site-lang-btn.is-active {
   color: #fff;
+}
+
+.site-lang-btn:disabled {
+  opacity: 1;
+  color: inherit;
+  cursor: default;
 }
 
 .site-lang-divider {
@@ -1508,5 +1608,35 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .app-root.lang-zh .hero-title {
+    margin-top: 4cqw;
+    font-size: clamp(96px, 21cqw, 158px);
+  }
+
+  .app-root.lang-zh .hero-role-row {
+    width: 90%;
+    margin-top: 31.5cqw;
+    font-size: clamp(50px, 10.6cqw, 76px);
+  }
+
+  .app-root.lang-zh .hero-actions {
+    width: 88%;
+    margin-top: 63.5cqw;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-root.lang-zh .hero-title {
+    margin-top: 6cqw;
+    font-size: clamp(72px, 22cqw, 110px);
+  }
+
+  .app-root.lang-zh .hero-role-row {
+    margin-top: 40cqw;
+    font-size: clamp(42px, 14.8cqw, 72px);
   }
 }

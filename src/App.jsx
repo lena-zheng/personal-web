@@ -54,6 +54,8 @@ const skills = [
   },
 ];
 
+const skillsEn = skills;
+
 const aboutIntro =
   'Skilled at boosting premium subscription growth via full-app link strategies including onboarding, paywall, features, promotions and emails. Build sustainable conversion systems through data-driven funnel analysis and A/B testing.';
 
@@ -73,6 +75,58 @@ const contactItems = [
   { label: 'Phone number', value: '17863961311' },
   { label: 'Email', value: '17863961311@163.com' },
 ];
+
+const copyMap = {
+  EN: {
+    menuOpen: 'MENU',
+    menuClose: 'CLOSE',
+    navItems,
+    aboutMenuLabel: 'ABOUT',
+    heroTitle: "HI, I'M LENA",
+    heroRoleLeft: 'PRODUCT',
+    heroRoleRight: 'DESIGNER',
+    heroAbout: 'About me',
+    heroContact: 'Contact me',
+    aboutTitle: 'ABOUT ME',
+    aboutIntro,
+    aboutDetails,
+    skills,
+    projectTitle: 'MY PROJECT',
+    projectCardTitle: 'premium conversion',
+    projectCardDesc: 'Designing Across the Premium Conversion Journey',
+    contactTitleTop: 'CONTACT',
+    contactTitleBottom: 'ME',
+    contactItems,
+  },
+  ZH: {
+    menuOpen: '菜单',
+    menuClose: '关闭',
+    navItems: [
+      { href: '#home', label: '首页' },
+      { href: '#about', label: '关于我' },
+      { href: '#project', label: '项目' },
+      { href: '#contact', label: '联系' },
+    ],
+    aboutMenuLabel: '关于我',
+    heroTitle: '你好，我叫郑雪莹',
+    heroRoleLeft: '产品',
+    heroRoleRight: '设计',
+    heroAbout: '关于我',
+    heroContact: '联系我',
+    aboutTitle: '关于我',
+    aboutIntro:
+      '擅长通过 onboarding、paywall、核心功能、促销与邮件等全链路体验策略，提升高级订阅转化，并通过漏斗分析与 A/B 实验构建可持续增长系统。',
+    aboutDetails:
+      '具备软硬件生态端到端整合能力，可将复杂规则沉淀为可复用 SOP 与模板，降低协作成本并提升交付效率。',
+    skills: skillsEn,
+    projectTitle: '我的项目',
+    projectCardTitle: '高级订阅转化',
+    projectCardDesc: '围绕高级订阅转化旅程的产品设计',
+    contactTitleTop: 'CONTACT',
+    contactTitleBottom: 'ME',
+    contactItems,
+  },
+};
 
 function ScrollFloat({
   children,
@@ -162,21 +216,21 @@ function ScrollFloat({
   );
 }
 
-function ContactSection() {
+function ContactSection({ copy }) {
   return (
-    <section className="contact-page" id="contact" aria-label="Contact me">
+    <section className="contact-page" id="contact" aria-label={copy.heroContact}>
       <div className="contact-canvas">
         <div className="contact-left">
           <div className="contact-title">
-            <span>CONTACT</span>
-            <span>ME</span>
+            <span>{copy.contactTitleTop}</span>
+            <span>{copy.contactTitleBottom}</span>
           </div>
 
           <img className="contact-hand" src="/assets/contact-hand-purple.png" alt="" aria-hidden="true" />
         </div>
 
-        <div className="contact-list" aria-label="Contact methods">
-          {contactItems.map((item) => (
+        <div className="contact-list" aria-label={copy.heroContact}>
+          {copy.contactItems.map((item) => (
             <button className="contact-list-item" type="button" key={item.label}>
               <span className="contact-list-label">{item.label}</span>
               <span className="contact-flow-layer" aria-hidden="true">
@@ -196,7 +250,7 @@ function ContactSection() {
   );
 }
 
-function ProjectSection({ scrollContainerRef }) {
+function ProjectSection({ scrollContainerRef, copy }) {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
 
@@ -308,7 +362,7 @@ function ProjectSection({ scrollContainerRef }) {
     <section className="project-page" id="project" aria-label="Project" ref={sectionRef}>
       <div className="project-sticky">
         <div className="project-canvas">
-          <h2 className="project-title">MY PROJECT</h2>
+          <h2 className="project-title">{copy.projectTitle}</h2>
 
           <div className="project-track" ref={trackRef}>
             {projectItems.map((item) => (
@@ -318,8 +372,8 @@ function ProjectSection({ scrollContainerRef }) {
                     <div className="project-card-copy">
                       <span className="project-card-number">{item.number}</span>
                       <span className="project-card-text">
-                        <span className="project-card-name">{item.title}</span>
-                        <span className="project-card-description">{item.description}</span>
+                        <span className="project-card-name">{copy.projectCardTitle}</span>
+                        <span className="project-card-description">{copy.projectCardDesc}</span>
                       </span>
                     </div>
                     <button className="project-card-link" type="button" aria-label={`Open project ${item.number}`}>
@@ -339,7 +393,7 @@ function ProjectSection({ scrollContainerRef }) {
   );
 }
 
-function HeroSection() {
+function HeroSection({ copy }) {
   const [heroImageState, setHeroImageState] = useState('default');
   const imageWrapRef = useRef(null);
   const frameRef = useRef(0);
@@ -384,11 +438,11 @@ function HeroSection() {
       <DotGrid className="hero-dot-grid" />
 
       <div className="hero-stage" onPointerMove={moveHeroImage} onPointerLeave={resetHeroImage}>
-        <h1 className="hero-title">HI, I&apos;M LENA</h1>
+        <h1 className="hero-title">{copy.heroTitle}</h1>
 
         <div className="hero-role-row">
-          <span>PRODUCT</span>
-          <span>DESIGNER</span>
+          <span>{copy.heroRoleLeft}</span>
+          <span>{copy.heroRoleRight}</span>
         </div>
 
         <div className="hero-image-wrap" ref={imageWrapRef}>
@@ -404,7 +458,7 @@ function HeroSection() {
           <button
             type="button"
             className="hero-btn"
-            aria-label="About me"
+            aria-label={copy.heroAbout}
             onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
             onPointerEnter={() => setHeroImageState('left')}
             onPointerLeave={() => setHeroImageState('default')}
@@ -412,14 +466,14 @@ function HeroSection() {
             onBlur={() => setHeroImageState('default')}
           >
             <span className="hero-btn-label" aria-hidden="true">
-              <span>About me</span>
-              <span>About me</span>
+              <span>{copy.heroAbout}</span>
+              <span>{copy.heroAbout}</span>
             </span>
           </button>
           <button
             type="button"
             className="hero-btn"
-            aria-label="contect me"
+            aria-label={copy.heroContact}
             onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
             onPointerEnter={() => setHeroImageState('right')}
             onPointerLeave={() => setHeroImageState('default')}
@@ -427,8 +481,8 @@ function HeroSection() {
             onBlur={() => setHeroImageState('default')}
           >
             <span className="hero-btn-label" aria-hidden="true">
-              <span>contect me</span>
-              <span>contect me</span>
+              <span>{copy.heroContact}</span>
+              <span>{copy.heroContact}</span>
             </span>
           </button>
         </div>
@@ -437,7 +491,7 @@ function HeroSection() {
   );
 }
 
-function AboutSection({ scrollContainerRef }) {
+function AboutSection({ scrollContainerRef, copy }) {
   const sectionRef = useRef(null);
   const scrambleEnabledRef = useRef(false);
 
@@ -612,7 +666,7 @@ function AboutSection({ scrollContainerRef }) {
   }, [scrollContainerRef]);
 
   return (
-    <section className="about-page" id="about" aria-label="About me" ref={sectionRef}>
+    <section className="about-page" id="about" aria-label={copy.heroAbout} ref={sectionRef}>
       <div className="about-canvas">
         <div className="about-copy">
           <ScrollFloat
@@ -622,7 +676,7 @@ function AboutSection({ scrollContainerRef }) {
             stagger={0.035}
             scrollEnd="top center+=20%"
           >
-            ABOUT ME
+            {copy.aboutTitle}
           </ScrollFloat>
           <div className="about-description about-scramble">
             <ScrollFloat
@@ -633,7 +687,7 @@ function AboutSection({ scrollContainerRef }) {
               scrollEnd="top bottom-=30%"
               stagger={0.003}
             >
-              {aboutIntro}
+              {copy.aboutIntro}
             </ScrollFloat>
             <ScrollFloat
               as="p"
@@ -643,12 +697,12 @@ function AboutSection({ scrollContainerRef }) {
               scrollEnd="top bottom-=30%"
               stagger={0.003}
             >
-              {aboutDetails}
+              {copy.aboutDetails}
             </ScrollFloat>
           </div>
         </div>
 
-        {skills.map((skill) => (
+        {copy.skills.map((skill) => (
           <div key={skill.label} className={`about-pill about-decor ${skill.className}`} data-rotation={skill.rotation}>
             <span>{skill.label}</span>
           </div>
@@ -688,6 +742,8 @@ export default function App() {
   const [language, setLanguage] = useState('EN');
   const [navOpen, setNavOpen] = useState(false);
   const pageRef = useRef(null);
+  const copy = copyMap[language];
+  const contactCopy = copyMap.EN;
 
   useEffect(() => {
     const page = pageRef.current;
@@ -731,9 +787,9 @@ export default function App() {
   };
 
   return (
-    <>
+    <div className={`app-root ${language === 'ZH' ? 'lang-zh' : 'lang-en'}`}>
       <button type="button" className="menu-trigger" onClick={() => setNavOpen((prev) => !prev)}>
-        {navOpen ? 'CLOSE' : 'MENU'}
+        {navOpen ? copy.menuClose : copy.menuOpen}
       </button>
       <nav className="site-nav" aria-label="Primary">
         <div className="site-nav-left" />
@@ -742,7 +798,10 @@ export default function App() {
           <button
             type="button"
             className={`site-lang-btn${language === 'EN' ? ' is-active' : ''}`}
-            onClick={() => setLanguage('EN')}
+            onClick={() => {}}
+            disabled
+            aria-disabled="true"
+            tabIndex={-1}
           >
             EN
           </button>
@@ -752,7 +811,10 @@ export default function App() {
           <button
             type="button"
             className={`site-lang-btn${language === 'ZH' ? ' is-active' : ''}`}
-            onClick={() => setLanguage('ZH')}
+            onClick={() => {}}
+            disabled
+            aria-disabled="true"
+            tabIndex={-1}
           >
             中文
           </button>
@@ -771,10 +833,10 @@ export default function App() {
         </div>
         <aside className={`menu-drawer${navOpen ? ' is-open' : ''}`} aria-label="Navigation menu" aria-hidden={!navOpen}>
           <ul className="menu-list">
-            {navItems.map((item, index) => (
+            {copy.navItems.map((item, index) => (
               <li key={item.label} className="menu-item-wrap">
                 <a href={item.href} className="menu-item" onClick={(event) => handleNavClick(event, item.href)}>
-                  <span>{item.label === 'ABOUT ME' ? 'ABOUT' : item.label}</span>
+                  <span>{item.label === 'ABOUT ME' ? copy.aboutMenuLabel : item.label}</span>
                   <em>{String(index + 1).padStart(2, '0')}</em>
                 </a>
               </li>
@@ -794,11 +856,11 @@ export default function App() {
             hoverTrailAmount={5}
           />
         </div>
-        <HeroSection />
-        <AboutSection scrollContainerRef={pageRef} />
-        <ProjectSection scrollContainerRef={pageRef} />
-        <ContactSection />
+        <HeroSection copy={copy} />
+        <AboutSection scrollContainerRef={pageRef} copy={copy} />
+        <ProjectSection scrollContainerRef={pageRef} copy={copy} />
+        <ContactSection copy={contactCopy} />
       </main>
-    </>
+    </div>
   );
 }
