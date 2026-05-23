@@ -685,6 +685,8 @@ function AboutSection({ scrollContainerRef }) {
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
+  const [language, setLanguage] = useState('EN');
+  const [navOpen, setNavOpen] = useState(false);
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -724,27 +726,62 @@ export default function App() {
     }
 
     event.preventDefault();
+    setNavOpen(false);
     target.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
+      <button type="button" className="menu-trigger" onClick={() => setNavOpen((prev) => !prev)}>
+        {navOpen ? 'CLOSE' : 'MENU'}
+      </button>
       <nav className="site-nav" aria-label="Primary">
-        {navItems.map((item) => {
-          const sectionId = item.href.slice(1);
+        <div className="site-nav-left" />
 
-          return (
-            <a
-              key={item.label}
-              href={item.href}
-              className={`site-nav-item${activeSection === sectionId ? ' is-active' : ''}`}
-              onClick={(event) => handleNavClick(event, item.href)}
-            >
-              {item.label}
-            </a>
-          );
-        })}
+        <div className="site-lang-switch" aria-label="Language switch">
+          <button
+            type="button"
+            className={`site-lang-btn${language === 'EN' ? ' is-active' : ''}`}
+            onClick={() => setLanguage('EN')}
+          >
+            EN
+          </button>
+          <span className="site-lang-divider" aria-hidden="true">
+            /
+          </span>
+          <button
+            type="button"
+            className={`site-lang-btn${language === 'ZH' ? ' is-active' : ''}`}
+            onClick={() => setLanguage('ZH')}
+          >
+            中文
+          </button>
+        </div>
       </nav>
+
+      <>
+        <div
+          className={`menu-overlay${navOpen ? ' is-open' : ''}`}
+          onClick={() => setNavOpen(false)}
+          aria-hidden={navOpen ? 'false' : 'true'}
+        />
+        <div className={`menu-layer-stack${navOpen ? ' is-open' : ''}`} aria-hidden="true">
+          <div className="menu-layer menu-layer--1" />
+          <div className="menu-layer menu-layer--2" />
+        </div>
+        <aside className={`menu-drawer${navOpen ? ' is-open' : ''}`} aria-label="Navigation menu" aria-hidden={!navOpen}>
+          <ul className="menu-list">
+            {navItems.map((item, index) => (
+              <li key={item.label} className="menu-item-wrap">
+                <a href={item.href} className="menu-item" onClick={(event) => handleNavClick(event, item.href)}>
+                  <span>{item.label === 'ABOUT ME' ? 'ABOUT' : item.label}</span>
+                  <em>{String(index + 1).padStart(2, '0')}</em>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </>
       <main className="site-page" ref={pageRef}>
         <div className="global-shape-grid" aria-hidden="true">
           <ShapeGrid
