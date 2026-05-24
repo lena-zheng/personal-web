@@ -8,10 +8,18 @@ import StickerPeel from './StickerPeel';
 
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
 
-const heroImages = {
-  default: '/assets/hero-default.png',
-  left: '/assets/hero-left.png',
-  right: '/assets/hero-right.png',
+const heroLookImages = {
+  upLeft: '/assets/hero-look-up-left.png',
+  up: '/assets/hero-look-up.png',
+  upRight: '/assets/hero-look-up-right.png',
+  downLeft: '/assets/hero-look-down-left.png',
+  down: '/assets/hero-look-down.png',
+  downRight: '/assets/hero-look-down-right.png',
+};
+
+const heroHoverImages = {
+  left: '/assets/left_hover.png',
+  right: '/assets/right_hover.png',
 };
 
 const navItems = [
@@ -394,7 +402,9 @@ function ProjectSection({ scrollContainerRef, copy }) {
 }
 
 function HeroSection({ copy }) {
-  const [heroImageState, setHeroImageState] = useState('default');
+  const [heroLookState, setHeroLookState] = useState('down');
+  const [heroHoverState, setHeroHoverState] = useState(null);
+  const [hasPointerMoved, setHasPointerMoved] = useState(false);
   const imageWrapRef = useRef(null);
   const frameRef = useRef(0);
 
@@ -413,11 +423,22 @@ function HeroSection({ copy }) {
       const centerY = rect.top + rect.height / 2;
       const maxX = event.clientX >= centerX ? stageRect.right - centerX : centerX - stageRect.left;
       const maxY = event.clientY >= centerY ? stageRect.bottom - centerY : centerY - stageRect.top;
-      const offsetX = Math.max(-1, Math.min(1, (event.clientX - centerX) / maxX)) * 50;
-      const offsetY = Math.max(-1, Math.min(1, (event.clientY - centerY) / maxY)) * 50;
+      const normX = Math.max(-1, Math.min(1, (event.clientX - centerX) / Math.max(1, maxX)));
+      const normY = Math.max(-1, Math.min(1, (event.clientY - centerY) / Math.max(1, maxY)));
+      const offsetX = normX * 50;
+      const offsetY = normY * 50;
+      const vertical = normY < 0 ? 'up' : 'down';
+      const horizontal = Math.abs(normX) < 0.22 ? '' : normX < 0 ? 'Left' : 'Right';
+      const nextLookState = `${vertical}${horizontal}`;
+      const hueShift = normX * 6;
+      const saturation = 1 + Math.abs(normY) * 0.08;
 
       imageWrap.style.setProperty('--hero-image-x', `${offsetX}px`);
       imageWrap.style.setProperty('--hero-image-y', `${offsetY}px`);
+      imageWrap.style.setProperty('--hero-image-hue', `${hueShift}deg`);
+      imageWrap.style.setProperty('--hero-image-saturation', `${saturation}`);
+      setHasPointerMoved(true);
+      setHeroLookState((prev) => (prev === nextLookState ? prev : nextLookState));
     });
   };
 
@@ -431,7 +452,20 @@ function HeroSection({ copy }) {
     window.cancelAnimationFrame(frameRef.current);
     imageWrap.style.setProperty('--hero-image-x', '0px');
     imageWrap.style.setProperty('--hero-image-y', '0px');
+    imageWrap.style.setProperty('--hero-image-hue', '0deg');
+    imageWrap.style.setProperty('--hero-image-saturation', '1');
+    setHeroLookState('down');
+    setHeroHoverState(null);
   };
+
+  const activeHeroImage = heroHoverState
+    ? heroHoverImages[heroHoverState]
+    : hasPointerMoved
+      ? heroLookImages[heroLookState]
+      : '/assets/hero-default.png';
+  const preloadHeroImages = ['/assets/hero-default.png', ...Object.values(heroLookImages), ...Object.values(heroHoverImages)].filter(
+    (src) => src !== activeHeroImage
+  );
 
   return (
     <section className="hero-page" id="home" aria-label="Intro Hero">
@@ -446,12 +480,10 @@ function HeroSection({ copy }) {
         </div>
 
         <div className="hero-image-wrap" ref={imageWrapRef}>
-          <img src={heroImages[heroImageState]} alt="Lena character portrait" className="hero-image" />
-          {Object.entries(heroImages)
-            .filter(([key]) => key !== heroImageState)
-            .map(([key, src]) => (
-              <img key={key} src={src} alt="" className="hero-image-preload" aria-hidden="true" />
-            ))}
+          <img src={activeHeroImage} alt="Lena character portrait" className="hero-image" />
+          {preloadHeroImages.map((src) => (
+            <img key={src} src={src} alt="" className="hero-image-preload" aria-hidden="true" />
+          ))}
         </div>
 
         <div className="hero-actions">
@@ -460,10 +492,10 @@ function HeroSection({ copy }) {
             className="hero-btn"
             aria-label={copy.heroAbout}
             onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
-            onPointerEnter={() => setHeroImageState('left')}
-            onPointerLeave={() => setHeroImageState('default')}
-            onFocus={() => setHeroImageState('left')}
-            onBlur={() => setHeroImageState('default')}
+            onPointerEnter={() => setHeroHoverState('left')}
+            onPointerLeave={() => setHeroHoverState(null)}
+            onFocus={() => setHeroHoverState('left')}
+            onBlur={() => setHeroHoverState(null)}
           >
             <span className="hero-btn-label" aria-hidden="true">
               <span>{copy.heroAbout}</span>
@@ -475,10 +507,10 @@ function HeroSection({ copy }) {
             className="hero-btn"
             aria-label={copy.heroContact}
             onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
-            onPointerEnter={() => setHeroImageState('right')}
-            onPointerLeave={() => setHeroImageState('default')}
-            onFocus={() => setHeroImageState('right')}
-            onBlur={() => setHeroImageState('default')}
+            onPointerEnter={() => setHeroHoverState('right')}
+            onPointerLeave={() => setHeroHoverState(null)}
+            onFocus={() => setHeroHoverState('right')}
+            onBlur={() => setHeroHoverState(null)}
           >
             <span className="hero-btn-label" aria-hidden="true">
               <span>{copy.heroContact}</span>
